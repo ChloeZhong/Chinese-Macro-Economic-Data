@@ -1,0 +1,113 @@
+# Chinese Macro Economic Data -- 社会消费品
+import jqdatasdk
+from jqdatasdk import macro
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.mlab as mlab
+plt.rcParams['font.sans-serif'] = ['SimHei']  #显示中文
+plt.rcParams['axes.unicode_minus'] = False # 显示负号
+
+# 设定最大显示行数、列数为10000
+pd.set_option('display.max_rows', 10000)
+pd.set_option('display.max_columns', 10000)
+pd.set_option('display.width', 10000)
+# 本地调应账号密码
+jqdatasdk.auth('15942614697','zc643326')
+
+
+# 调取社会消费品数据
+q1 = jqdatasdk.query(macro.MAC_SALE_RETAIL_MONTH)
+df1 = macro.run_query(q1)
+df1 = df1.sort_values(by = 'stat_month',ascending= True )
+df1_recent = df1[-36:]
+
+# 画图：
+x = df1_recent.stat_month
+
+# 子图1. 社会消费品零售总额同比增长 VS 限额以上社消同比增长
+data_retail_sin_yoy = df1_recent.retail_sin_yoy   # 社消同比增速
+data_scale_retail_sin_yoy = df1_recent.scale_retail_sin_yoy  # 限额以上社消同比增速
+
+fig1 = plt.figure(figsize = (8,6))
+plt.title('社消同比增速图',fontsize = 18)
+ax1 = fig1.add_subplot(111)
+ax1.plot(x,data_retail_sin_yoy,color = 'b')
+ax1.set_xlabel('月份',fontsize = 12)
+ax1.set_ylabel('社消同比增速(蓝色) %',fontsize = 12)
+plt.xticks(rotation = 90)  # x轴刻度旋转90度
+ax1.set_yticks([0,4,8,12])   # y轴刻度设置成相同，增强可对比性
+
+# 同x轴双Y轴
+ax2 = ax1.twinx()
+ax2.plot(x,data_scale_retail_sin_yoy,color = 'g')
+ax2.set_ylabel('限额以上社消同比增速（绿色） %',fontsize = 12)
+ax2.set_yticks([0,4,8,12])
+
+plt.show()
+
+
+# 子图2. 社会消费品零售总额累计增长 VS 限额以上社消累计增长
+data_retail_acc_yoy = df1_recent.retail_acc_yoy   # y1
+data_scale_retail_acc_yoy = df1_recent.scale_retail_acc_yoy  # y2
+
+fig2 = plt.figure(figsize = (8,6))
+plt.title('社消累计增速图',fontsize = 18)
+ax3 = fig2.add_subplot(111)
+ax3.plot(x,data_retail_acc_yoy,color = 'b')
+ax3.set_xlabel('月份',fontsize = 12)
+ax3.set_ylabel('社消累计增速(蓝色) %',fontsize = 12)
+plt.xticks(rotation = 90)
+ax3.set_yticks([4,8,12])
+
+# 同x轴双Y轴
+ax4 = ax3.twinx()
+ax4.plot(x,data_scale_retail_acc_yoy,color = 'g')
+ax4.set_ylabel('限额以上社消累计增速（绿色） %',fontsize = 12)
+ax4.set_yticks([4,8,12])
+
+plt.show()
+
+
+
+# 子图3：城镇 VS 乡村社消零售总额同比增速
+data_city_retail_sin_yoy = df1_recent.city_retail_sin_yoy  # 城镇社消同比增速
+data_rural_retail_sin_yoy = df1_recent.rural_retail_sin_yoy  # 乡村社消同比增速
+
+fig = plt.figure(figsize = (8,6))
+plt.title('城镇vs乡村社消同比增速 %',fontsize = 18)
+ax5 = fig.add_subplot(111)
+ax5.plot(x,data_city_retail_sin_yoy,color = 'b')
+ax5.set_xlabel('月份',fontsize = 12)
+ax5.set_ylabel('城镇社消同比增速(蓝色) %',fontsize = 12)
+plt.xticks(rotation = 90)
+ax5.set_yticks([8,10,12])
+
+# 同x轴双Y轴
+ax6 = ax5.twinx()
+ax6.plot(x,data_rural_retail_sin_yoy,color = 'g')
+ax6.set_ylabel('乡村社消同比增速（绿色） %',fontsize = 12)
+ax6.set_yticks([8,10,12])
+
+plt.show()
+
+# 子图4： 城镇 VS 乡村社消累计增速
+data_city_retail_acc_yoy = df1_recent.city_retail_acc_yoy  # 城镇社消累计即增速
+data_rural_retail_acc_yoy = df1_recent.rural_retail_acc_yoy  # 乡村社消累计增速
+
+fig4 = plt.figure(figsize = (8,6))
+plt.title('城镇vs乡村社消累计增速 %',fontsize = 18)
+ax7 = fig4.add_subplot(111)
+ax7.plot(x,data_city_retail_acc_yoy,color = 'b')
+ax7.set_xlabel('月份',fontsize = 12)
+ax7.set_ylabel('城镇社消累计增速(蓝色) %',fontsize = 12)
+plt.xticks(rotation = 90)
+ax7.set_yticks([8,10,12])
+
+# 同x轴双Y轴
+ax8 = ax7.twinx()
+ax8.plot(x,data_rural_retail_acc_yoy,color = 'g')
+ax8.set_ylabel('乡村社消累计增速（绿色） %',fontsize = 12)
+ax8.set_yticks([8,10,12])
+
+plt.show()
+

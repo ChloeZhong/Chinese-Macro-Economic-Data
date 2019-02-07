@@ -12,7 +12,7 @@ pd.set_option('display.max_rows', 10000)
 pd.set_option('display.max_columns', 10000)
 pd.set_option('display.width', 10000)
 # 本地调应账号密码
-jqdatasdk.auth('15942614697','zc643326')
+jqdatasdk.auth()
 
 
 # 调取社会消费品数据
